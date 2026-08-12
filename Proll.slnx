@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Proll.Api/Proll.Api.csproj" />
+  <Project Path="Proll.Shared/Proll.Shared.csproj" />
+  <Project Path="Proll/Proll.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>
