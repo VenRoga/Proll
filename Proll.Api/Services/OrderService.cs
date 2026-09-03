@@ -65,19 +65,23 @@ namespace Proll.Api.Services
             }
 
         }
-        public async Task<AddressDto[]> GetUserOrdersAsync(int userId, int startIndex, int pageSize) => 
-            await _context.UserAddresses
+        public async Task<OrderDto[]> GetUserOrdersAsync(int userId, int startIndex, int pageSize) => 
+            await _context.Orders
                 .AsNoTracking()
                 .Where(a => a.UserId == userId)
                 .OrderByDescending(a => a.Id)
                 .Skip(startIndex)
                 .Take(pageSize)
-                .Select(a => new AddressDto
+                .Select(a => new OrderDto
                 {
-                    Id = a.Id,
                     Address = a.Address,
-                    IsDefault = a.IsDefault,
-                    Name = a.Name
+                    AddressName = a.AddressName,
+                    Date = a.Date,
+                    Id = a.Id,
+                    Remarks = a.Remarks,
+                    Status = a.Status,
+                    TotalAmount = a.TotalAmount,
+                    TotalItems = a.TotalItems
                 })
                 .ToArrayAsync();
         public async Task<ApiResult<OrderItemDto[]>> GetUserOrderItemAsync(int orderId, int userId)

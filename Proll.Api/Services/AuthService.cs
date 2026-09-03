@@ -3,6 +3,10 @@ using Proll.Api.Models.BaseModels;
 using Proll.Shared.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 
 namespace Proll.Api.Services
@@ -11,10 +15,13 @@ namespace Proll.Api.Services
     {
         private readonly BaseModelContext _context;
         private readonly IPasswordHasher<User> _passwordHasher;
-        public AuthService(BaseModelContext context, IPasswordHasher<User> passwordHasher)
+        private readonly IConfiguration _configuration;
+        public AuthService(BaseModelContext context, IPasswordHasher<User> passwordHasher, IConfiguration configuration)
         {
             _context = context;
             _passwordHasher = passwordHasher;
+            _configuration = configuration;
+
         }
         public async Task<ApiResult> RegisterAsync(RegisterDto dto)
         {
@@ -54,10 +61,36 @@ namespace Proll.Api.Services
                 return ApiResult<LoggedInUser>.Fail("Incorrect password");
             }
 
-            var jwt = "JWT _TTOKEN";
+            var jwt = GenerateToken(user);
 
             var loggedInUser = new LoggedInUser(user.Id, user.Name, user.Email, jwt);
             return ApiResult<LoggedInUser>.Success(loggedInUser);
+        }
+
+        private string GenerateToken(User user)
+        {
+            Claim[] claims = [
+                new (ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new (ClaimTypes.Name, user.Name.ToString()),
+                new (ClaimTypes.Email, user.Email.ToString())
+                ];
+
+            var secretKey = _configuration.GetValue<string>("Jwt:SecretKey");
+            var securityKey = System.Text.Encoding.UTF8.GetBytes(secretKey);
+            var symmetricKey = new SymmetricSecurityKey(securityKey);
+
+            var signiingCreds = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256);
+
+            var expiereInMinutes = _configuration.GetValue<int>("Jwt:ExpireInMinutes");
+
+            var jwtSecurityToken = new JwtSecurityToken(
+                issuer: _configuration.GetValue<string>("Jwt:Issuer"),
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(expiereInMinutes),
+                signingCredentials: signiingCreds
+                );
+
+            return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
         }
     }
 }

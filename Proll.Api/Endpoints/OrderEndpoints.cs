@@ -1,0 +1,47 @@
+﻿using Proll.Api.Services;
+using Proll.Shared;
+using Proll.Shared.Dtos;
+using System.Security.Claims;
+
+namespace Proll.Api.Endpoints;
+
+public static class OrderEndpoints
+{
+    public static IEndpointRouteBuilder MapOrderEndpoints(this IEndpointRouteBuilder app)
+    {
+        var orderGroup = app.MapGroup("/api/orders")
+            .RequireAuthorization()
+            .WithTags("Orders");
+
+        orderGroup.MapPost("/place-order", async (PlaceOrderDto dto, OrderService service, ClaimsPrincipal principal) =>
+        {
+            return Results.Ok(await service.PlaceOrderAsync(dto, principal.GetUserId()));
+        })
+            .Produces<ApiResult>()
+            .WithName("Place-Order");
+
+        orderGroup.MapGet("/user/{userId:int}", async (int userId, int startIndex, int pageSize, OrderService service, ClaimsPrincipal principal) =>
+        {
+            if(userId != principal.GetUserId())
+            {
+                return Results.Unauthorized();
+            }
+            return Results.Ok(await service.GetUserOrdersAsync(principal.GetUserId(), startIndex, pageSize));
+        })
+            .Produces<OrderDto[]>()
+            .WithName("Get-User-Orders");
+
+        orderGroup.MapGet("/user/{userId:int}/orders/{orderId:int}/items", async (int userId, int orderID, OrderService service, ClaimsPrincipal principal) =>
+        {
+            if (userId != principal.GetUserId())
+            {
+                return Results.Unauthorized();
+            }
+            return Results.Ok(await service.GetUserOrderItemAsync(principal.GetUserId(), orderID));
+        })
+            .Produces<OrderItemDto[]>()
+            .WithName("Get-User-Order-Items");
+
+        return app;
+    }
+}

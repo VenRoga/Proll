@@ -1,5 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Proll.Api.Endpoints;
+using Proll.Api.Models;
+using Proll.Api.Models.BaseModels;
 using Proll.Api.Models.BaseModelsContext;
+using Proll.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +22,39 @@ builder.Services.AddDbContext<BaseModelContext>(options =>
     options.UseSqlite(connectionString);
 });
 
+builder.Services.AddTransient<AuthService>()
+    .AddTransient<OrderService>()
+    .AddTransient<ProductService>()
+    .AddTransient<UserService>()
+    .AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var issuer = builder.Configuration.GetValue<string>("Jwt:Issuer");
+
+    var secretKey = builder.Configuration.GetValue<string>("Jwt:SecretKey");
+    var securityKey = System.Text.Encoding.UTF8.GetBytes(secretKey);
+    var symmetricKey = new SymmetricSecurityKey(securityKey);
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = issuer,
+        ValidateIssuer = true,
+        IssuerSigningKey = symmetricKey,
+        ValidateIssuerSigningKey = true,
+        ValidateAudience = false
+    };
+});
+builder.Services.AddAuthentication();
+
+
+    
 
 var app = builder.Build();
 
@@ -22,12 +62,30 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    AuthoMigrateDb(app.Services);
 }
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseAuthentication()
+    .UseAuthorization();
 
+app.UseAuthorization();
 app.MapControllers();
 
+app.MapAuthEndpoints()
+    .MapUserEndpoints()
+    .MapProductEnpoints()
+    .MapOrderEndpoints();
+
 app.Run();
+
+
+static void AuthoMigrateDb(IServiceProvider sp)//автоматическая миграция в бд
+{
+    using var scope = sp.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+    if(context.Database.GetAppliedMigrations().Any())
+        context.Database.Migrate();
+}

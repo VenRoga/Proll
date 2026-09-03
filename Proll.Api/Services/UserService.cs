@@ -68,7 +68,7 @@ namespace Proll.Api.Services
             }
 
         }
-        public async Task<AddressDto[]> GetAddresses(int userId) =>
+        public async Task<AddressDto[]> GetAddressesAsync(int userId) =>
                 await _context.UserAddresses
                     .AsNoTracking().Where(a => a.Id == userId)
                     .Select(a => new AddressDto

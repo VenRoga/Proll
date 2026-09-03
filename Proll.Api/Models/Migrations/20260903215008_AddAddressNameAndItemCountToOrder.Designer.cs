@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Proll.Api.Models.BaseModelsContext;
 
@@ -10,9 +11,11 @@ using Proll.Api.Models.BaseModelsContext;
 namespace Proll.Api.Models.Migrations
 {
     [DbContext(typeof(BaseModelContext))]
-    partial class BaseModelContextModelSnapshot : ModelSnapshot
+    [Migration("20260903215008_AddAddressNameAndItemCountToOrder")]
+    partial class AddAddressNameAndItemCountToOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.11");
