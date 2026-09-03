@@ -50,11 +50,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidateAudience = false
     };
-});
-builder.Services.AddAuthentication();
-
-
-    
+});  
 
 var app = builder.Build();
 
@@ -62,18 +58,15 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-
     AuthoMigrateDb(app.Services);
 }
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication()
-    .UseAuthorization();
-
+app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
 
+app.MapControllers();
 app.MapAuthEndpoints()
     .MapUserEndpoints()
     .MapProductEnpoints()
@@ -85,7 +78,7 @@ app.Run();
 static void AuthoMigrateDb(IServiceProvider sp)//автоматическая миграция в бд
 {
     using var scope = sp.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+    var context = scope.ServiceProvider.GetRequiredService<BaseModelContext>();
     if(context.Database.GetAppliedMigrations().Any())
         context.Database.Migrate();
 }
