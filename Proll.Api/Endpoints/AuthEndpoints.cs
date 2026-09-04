@@ -21,7 +21,7 @@ public static class AuthEndpoints
             return Results.Ok(await service.LoginAsync(dto));
         })
             .Produces<ApiResult<LoggedInUser>>()
-            .WithName("Register");
+            .WithName("Login");
 
         return app;
     }

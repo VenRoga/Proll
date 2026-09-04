@@ -68,9 +68,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapAuthEndpoints()
-    .MapUserEndpoints()
-    .MapProductEnpoints()
-    .MapOrderEndpoints();
+   .MapUserEndpoints()
+   .MapProductEndpoints()
+   .MapOrderEndpoints();
 
 app.Run();
 
@@ -79,6 +79,6 @@ static void AuthoMigrateDb(IServiceProvider sp)//автоматическая м
 {
     using var scope = sp.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<BaseModelContext>();
-    if(context.Database.GetAppliedMigrations().Any())
+    if(context.Database.GetPendingMigrations().Any())
         context.Database.Migrate();
 }

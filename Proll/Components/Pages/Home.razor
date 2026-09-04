@@ -1,1 +1,21 @@
-﻿
+﻿@page "/"
+@using Proll.Apis
+@using Proll.Shared.Dtos;
+
+@inject IProductApi ProductApi
+<h1>Hello WORLD!</h1>
+wragksalkg hjhjhjh
+<ul>
+    @foreach(var p in _products)
+    {
+        <li>@p.Name</li>
+    }
+</ul>
+
+@code{
+    ProductDto[] _products = [];
+    protected override async Task OnInitializedAsync()
+    {
+       _products = await ProductApi.GetProductsAsync();
+    }
+}

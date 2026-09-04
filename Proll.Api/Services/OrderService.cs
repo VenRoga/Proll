@@ -84,7 +84,7 @@ namespace Proll.Api.Services
                     TotalItems = a.TotalItems
                 })
                 .ToArrayAsync();
-        public async Task<ApiResult<OrderItemDto[]>> GetUserOrderItemAsync(int orderId, int userId)
+        public async Task<ApiResult<OrderItemDto[]>> GetUserOrderItemsAsync(int orderId, int userId)
         {
             var order = await _context.Orders
                 .AsNoTracking()

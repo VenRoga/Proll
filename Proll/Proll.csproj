@@ -70,6 +70,7 @@
         <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.90" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="10.0.90" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.11" />
+        <PackageReference Include="Refit.HttpClientFactory" Version="15.2.0" />
     </ItemGroup>
 
     <ItemGroup>

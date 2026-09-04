@@ -20,7 +20,7 @@ public static class OrderEndpoints
             .Produces<ApiResult>()
             .WithName("Place-Order");
 
-        orderGroup.MapGet("/user/{userId:int}", async (int userId, int startIndex, int pageSize, OrderService service, ClaimsPrincipal principal) =>
+        orderGroup.MapGet("/users/{userId:int}", async (int userId, int startIndex, int pageSize, OrderService service, ClaimsPrincipal principal) =>
         {
             if(userId != principal.GetUserId())
             {
@@ -31,13 +31,13 @@ public static class OrderEndpoints
             .Produces<OrderDto[]>()
             .WithName("Get-User-Orders");
 
-        orderGroup.MapGet("/user/{userId:int}/orders/{orderId:int}/items", async (int userId, int orderID, OrderService service, ClaimsPrincipal principal) =>
+        orderGroup.MapGet("/users/{userId:int}/orders/{orderId:int}/items", async (int userId, int orderId, OrderService service, ClaimsPrincipal principal) =>
         {
             if (userId != principal.GetUserId())
             {
                 return Results.Unauthorized();
             }
-            return Results.Ok(await service.GetUserOrderItemAsync(principal.GetUserId(), orderID));
+            return Results.Ok(await service.GetUserOrderItemsAsync(principal.GetUserId(), orderId));
         })
             .Produces<OrderItemDto[]>()
             .WithName("Get-User-Order-Items");
