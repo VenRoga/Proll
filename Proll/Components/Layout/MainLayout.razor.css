@@ -1,0 +1,4 @@
+.main-content {
+    padding-bottom: calc(var(--tabbar-height) + 5px);
+    overflow-y: auto;
+}

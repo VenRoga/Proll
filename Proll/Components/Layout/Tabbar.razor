@@ -1,5 +1,54 @@
-﻿<h3>Tabbar</h3>
+﻿@implements IDisposable
+@inject NavigationManager NavigationManager
+@foreach(var item in _menuItems)
+{
+    var iconClassPrefix = "bx";
+    var textClass = "text-secondary";
+    if(item.url == _selectedPageUrl)
+    {
+        iconClassPrefix = "bxs";
+        textClass = "text-app-primary";
+    }
+    <div class=" tabbar-item d-flex flex-column @textClass"
+    @onclick="item.OnTap">
+        <i class="icon bx @iconClassPrefix-@item.Icon"></i>
+        <span class="title">@item.Label</span>
+    </div>
+}
 
 @code {
+    private MenuItem[] _menuItems = [];
 
+    private string _selectedPageUrl = PageRoutes.Home;
+    protected override void OnInitialized()
+    {
+        _menuItems =
+        [
+            new("Home", "home", PageRoutes.Home, () => NavigateTo(PageRoutes.Home)),
+            new("Cart", "cart", PageRoutes.Cart, () => NavigateTo(PageRoutes.Cart)),
+            new("Orders", "objects-horizontal-left", PageRoutes.Orders, () => NavigateTo(PageRoutes.Orders)),
+            new("Profile", "user", PageRoutes.Profile, () => NavigateTo(PageRoutes.Profile)),
+            new("Help", "help-circle", PageRoutes.Help, () => NavigateTo(PageRoutes.Help))
+        ];
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+    private void NavigateTo(string url) => NavigationManager.NavigateTo(url);
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        _selectedPageUrl = e.Location.Replace(NavigationManager.BaseUri, "/");
+        InvokeAsync(StateHasChanged);
+    }  
+
+    public void Dispose() => NavigationManager.LocationChanged -= OnLocationChanged;
+
+    private record struct MenuItem(string Label, string Icon, string url, Action OnTap);
+    private static class PageRoutes
+    {
+        public const string Home = "/";
+        public const string Cart = "/cart";
+        public const string Orders = "/orders";
+        public const string Profile = "/profile";
+        public const string Help = "/help";
+    }
 }
+

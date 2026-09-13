@@ -28,7 +28,7 @@ namespace Proll
 
         private static void ConfigureRefit(IServiceCollection services)
         {
-            const string baseApiUrl = "https://mjx06psd-7263.eun1.devtunnels.ms";//можно через локал хост
+            const string baseApiUrl = "https://3ztzr37f-7263.euw.devtunnels.ms";//можно через локал хост
 
             services.AddRefitClient<IProductApi>()
                 .ConfigureHttpClient(SetHttpClient);

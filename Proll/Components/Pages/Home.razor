@@ -1,10 +1,37 @@
 ﻿@page "/"
-@using Proll.Apis
-@using Proll.Shared.Dtos;
+@using Proll.Components.Shared
 
 @inject IProductApi ProductApi
-<h1>Hello WORLD!</h1>
-wragksalkg hjhjhjh
+<div class="navbar bg-app-primary rext-white">
+
+</div>
+<SectionContent SectionName="pageTitle">
+    Fresh Veg Cart
+</SectionContent>/>
+
+<div class="container-fluid">
+    <div class="row">
+        @foreach(var p in _products)
+        {
+            <div class="col-12 mb-3 bg-white p-3 d-flex shadow gap-3">
+                <div class="img-container shadow">
+                    <img class="product-img" src="@p.ImageUrl" alt="" />
+                </div>
+                <div class="product-info">
+                    <label class="product-name d-block fw-bold h5">@p.Name</label>
+                    <label class="product-price d-block mt-2">@p.Price.ToString("C")/@p.Unit</label>
+
+                    @* <button type="button" class="btn-app mt-2">Add to Cart</button> *@
+                    <div class="mt-2">
+                        <CartButton Product="p"/>
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
+
 <ul>
     @foreach(var p in _products)
     {
@@ -19,3 +46,15 @@ wragksalkg hjhjhjh
        _products = await ProductApi.GetProductsAsync();
     }
 }
+<style>
+    .img-container {
+        border-radius: 20px;
+        width: 100px;
+        padding: 5px;
+    }
+    .product-img {
+        width: 100%;
+        height: 100%;
+    }
+    .produc
+</style>

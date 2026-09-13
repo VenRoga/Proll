@@ -1,0 +1,30 @@
+﻿
+@if(Product.Quantity == 0)
+{
+    <button type="button" class="btn-app" @onclick="Increment">Add to Cart</button>
+}
+else
+{
+    <div class="d-flex">    
+        <button class="btn-outline-app square right-radius-0" @onclick="Dicrement">-</button>
+        <span class="d-flex align-items-center justify-content-center square bg-app-lighter text-white">@Product.Quantity</span>
+        <button class="btn-outline-app square left-radius-0" @onclick="Increment">+</button>
+    </div>
+}
+
+@code{
+    [Parameter, EditorRequired]
+    public ProductDto Product { get; set; }
+
+    private void Increment()
+    {
+        Product.Quantity++;
+    }
+    private void Dicrement()
+    {
+        if(Product.Quantity > 0)
+        {
+            Product.Quantity--;
+        }
+    }
+}

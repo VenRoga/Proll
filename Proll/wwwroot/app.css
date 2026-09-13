@@ -1,10 +1,10 @@
 :root {
     --app--lighter: #FF6347;
-    --app--lighter: #FF5733;
-    --app--primat: #F2431D;
+    --app--light: #FF5733;
+    --app--primary: #F2431D;
     --app-dark: #E43712;
     --app--secondary: #FFC107;
-    --navbar--height: 60px;
+    --navbar--height: 50px;
     --tabbar--height: 60px;
 }
 
@@ -15,21 +15,99 @@ html, body {
 .status-bar-safe-area {
     display: none;
 }
-
+body {
+    background-color: #eee;
+}
 .bg-app-lighter{
-    background-color var(--app--lighter);
+    background-color: var(--app--lighter);
+}
+.bg-app-light{
+    background-color: var(--app--light);
+}
+.bg-app-primat {
+    background-color: var(--app--primat);
+}
+.bg-app-dark {
+    background-color: var(--app--dark);
+}
+.bg-app-secondary {
+    background-color: var(--app--secondary);
 }
 
-
-
-@supports (-webkit-touch-callout: none) {
-    .status-bar-safe-area {
-        display: flex;
-        position: sticky;
-        top: 0;
-        height: env(safe-area-inset-top);
-        background-color: #f7f7f7;
-        width: 100%;
-        z-index: 1;
+.text-app-lighter{
+    color: var(--app--lighter);
+}
+.text-app-light{
+    color: var(--app--light);
+}
+.text-app-primary {
+    color: var(--app--primary);
+}
+.text-app-dark {
+    color: var(--app--dark);
+}
+.text-app-secondary {
+    color: var(--app--secondary);
+}
+.status-bar-safe-area {
+    display: none;
+}
+.btn-app{
+    background-color: var(--app--lighter);
+    padding: 6px 15px;
+    border: none;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    border-radius: 5px;
+    text-decoration: none;
+}
+    .btn-app:hover{
+        text-decoration: none;
+        color:white;
     }
+.btn-outline-app {
+    background-color: white;
+    padding: 6px 15px;
+    border: 1px solid var(--app--lighter);
+    color: var(--app--lighter);
+    font-size: 15px;
+    outline: none;
+    border-radius: 5px;
+    text-decoration: none;
 }
+    .btn-outline-app:hover {
+        text-decoration: none;
+        color: var(--app--lighter);
+    }
+    .square{
+        height: 34px;
+        width: 34px;
+    }
+.right-radius-0{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.left-radius-0 {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.text-center{
+    text-align: center;
+    background-color: var(--app--lighter);
+
+}
+
+
+    @supports (-webkit-touch-callout: none) {
+        .status-bar-safe-area {
+            display: flex;
+            position: sticky;
+            top: 0;
+            height: env(safe-area-inset-top);
+            background-color: #f7f7f7;
+            width: 100%;
+            z-index: 1;
+        }
+    }

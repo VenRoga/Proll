@@ -20,7 +20,7 @@ namespace Proll.Api.Models.BaseModels
 
         public static Product[] GetSeedData()
         {
-            const string BaseImageUrl = "";
+            const string BaseImageUrl = "Proll.Shared/Pictures/";
 
             Product[] products = 
             [
